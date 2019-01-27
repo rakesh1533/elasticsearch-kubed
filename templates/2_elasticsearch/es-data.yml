@@ -95,7 +95,7 @@ spec:
             - name: discovery.zen.ping.unicast.hosts
               value: "elasticsearch-master.deafult.svc.cluster.local,elasticsearch.kube-system.svc.cluster.local"
             - name: ES_JAVA_OPTS
-              value: -Xms256mb -Xmx532mb
+              value: -Xms512m -Xmx512m
 
             - name: node.master
               value: "false"
