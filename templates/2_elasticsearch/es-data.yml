@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  namespace: {{ namespace }}
+  namespace: default
   name: elasticsearch-data
   labels:
     app: elasticsearch
@@ -9,7 +9,7 @@ metadata:
 spec:
   serviceName: elasticsearch-data
   # This is number of nodes that we want to run
-  replicas: {{ data_node.replicas }}
+  replicas: 2
   selector:
     matchLabels:
       app: elasticsearch
@@ -93,9 +93,9 @@ spec:
           # spec.template.spec.containers[elasticsearch].env
           env:
             - name: discovery.zen.ping.unicast.hosts
-              value: "elasticsearch-master.{{ namespace }}.svc.cluster.local,elasticsearch.{{ namespace }}.svc.cluster.local"
+              value: "elasticsearch-master.deafult.svc.cluster.local,elasticsearch.kube-system.svc.cluster.local"
             - name: ES_JAVA_OPTS
-              value: -Xms{{ data_node.heap_size }} -Xmx{{ data_node.heap_size }}
+              value: -Xms256mb -Xmx532mb
 
             - name: node.master
               value: "false"
@@ -107,7 +107,7 @@ spec:
               value: "true"
 
             - name: cluster.name
-              value: {{ cluster_name }}
+              value: elk
             - name: node.name
               valueFrom:
                 fieldRef:
@@ -135,15 +135,15 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
-        storageClassName: {{ data_node.storage_class }}
+        storageClassName: elk
         resources:
           requests:
-            storage: {{ data_node.volume_size }}Gi
+            storage: 20Gi
 ---
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  namespace: {{ namespace }}
+  namespace: default
   name: elasticsearch-data
 spec:
   maxUnavailable: 1
