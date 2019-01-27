@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: {{ namespace }}
+  namespace: default
   name: elasticsearch-master
   labels:
     component: elasticsearch
@@ -112,7 +112,7 @@ spec:
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  namespace: {{ namespace }}
+  namespace: default
   name: elasticsearch-master
 spec:
   maxUnavailable: 1
