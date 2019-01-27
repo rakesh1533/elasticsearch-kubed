@@ -1,7 +1,7 @@
 kind: Service
 apiVersion: v1
 metadata:
-  namespace: {{ namespace }}
+  namespace: default
   name: logstash
 spec:
   type: LoadBalancer
@@ -9,12 +9,12 @@ spec:
     app: logstash
   ports:
     - name: beats
-      port: {{ logstash_beats_port }}
+      port: 5044
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: {{ namespace }}
+  namespace: default
   name: logstash
   labels:
     app: logstash
@@ -32,7 +32,7 @@ spec:
         - name: logstash
           image: docker.elastic.co/logstash/logstash:6.5.2
           ports:
-            - containerPort: {{ logstash_beats_port }}
+            - containerPort: 5044
           volumeMounts:
             - name: logstash-pipelines
               mountPath: /usr/share/logstash/pipeline
